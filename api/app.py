@@ -505,19 +505,52 @@ def update_configuracion():
 # INICIAR SERVIDOR
 # =============================================================================
 
+# =============================================================================
+# SERVIR ARCHIVOS ESTÁTICOS
+# =============================================================================
+
+@app.route('/dashboard.js')
+def serve_js():
+    """Sirve el archivo JavaScript del dashboard"""
+    return send_from_directory('static', 'dashboard.js')
+
+
+# =============================================================================
+# HEALTH CHECK
+# =============================================================================
+
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Verifica el estado del sistema"""
+    return jsonify({
+        'success': True,
+        'status': 'online',
+        'timestamp': datetime.now().isoformat(),
+        'version': '1.0.0'
+    }), 200
+
+
 if __name__ == '__main__':
     print("\n" + "=" * 70)
     print("SERVIDOR API - DASHBOARD DE VIDEOVIGILANCIA")
     print("=" * 70)
     print(f"\n✓ API iniciada en: http://localhost:5000")
     print(f"✓ Dashboard: http://localhost:5000")
-    print("\nEndpoints disponibles:")
-    print("  GET  /api/dashboard/stats")
-    print("  GET  /api/personas")
-    print("  POST /api/personas")
-    print("  GET  /api/detecciones")
-    print("  GET  /api/eventos")
-    print("  GET  /api/camaras")
+    print("\n📋 Endpoints disponibles:")
+    print("  GET  /api/dashboard/stats       - Estadísticas generales")
+    print("  GET  /api/personas              - Listar personas")
+    print("  POST /api/personas              - Registrar persona")
+    print("  GET  /api/detecciones           - Historial detecciones")
+    print("  GET  /api/eventos               - Listar eventos")
+    print("  POST /api/eventos/:id/resolver  - Resolver evento")
+    print("  GET  /api/configuracion         - Ver configuración")
+    print("  POST /api/configuracion         - Actualizar config")
+    print("\n🎨 Features del Dashboard:")
+    print("  ✓ Formulario de registro con cámara")
+    print("  ✓ Monitoreo en vivo (simulado)")
+    print("  ✓ Exportar reportes PDF/Excel")
+    print("  ✓ Notificaciones en tiempo real")
+    print("  ✓ Página de configuración completa")
     print("\nPresiona Ctrl+C para detener")
     print("=" * 70 + "\n")
 

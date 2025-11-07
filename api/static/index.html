@@ -29,6 +29,9 @@
             border-radius: 15px;
             margin-bottom: 30px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         h1 {
@@ -40,6 +43,36 @@
         .subtitle {
             color: #666;
             font-size: 0.9em;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5em;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .notification-bell:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #c62828;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .stats-grid {
@@ -164,30 +197,6 @@
             color: #c62828;
         }
 
-        .event-item {
-            padding: 15px;
-            border-left: 4px solid #667eea;
-            background: #f8f9ff;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        .event-item.critical {
-            border-left-color: #c62828;
-            background: #ffebee;
-        }
-
-        .event-title {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .event-time {
-            font-size: 0.85em;
-            color: #666;
-        }
-
         .btn {
             padding: 10px 20px;
             border: none;
@@ -207,25 +216,14 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
         }
 
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .btn-success {
+            background: #4caf50;
+            color: white;
         }
 
         .nav-tabs {
@@ -233,6 +231,7 @@
             gap: 10px;
             margin-bottom: 20px;
             border-bottom: 2px solid #eee;
+            flex-wrap: wrap;
         }
 
         .nav-tab {
@@ -252,6 +251,270 @@
             color: #667eea;
         }
 
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+        }
+
+        .close-modal {
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        #videoPreview {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #000;
+        }
+
+        #capturedImage {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Live Stream */
+        .camera-stream {
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .camera-stream video,
+        .camera-stream canvas {
+            width: 100%;
+            display: block;
+        }
+
+        .stream-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .recording-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #c62828;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            min-width: 300px;
+            z-index: 2000;
+            animation: slideIn 0.3s;
+            display: none;
+        }
+
+        .toast.active {
+            display: block;
+        }
+
+        .toast.success {
+            border-left: 4px solid #4caf50;
+        }
+
+        .toast.error {
+            border-left: 4px solid #c62828;
+        }
+
+        .toast-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Config Section */
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .config-label {
+            flex: 1;
+        }
+
+        .config-label h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .config-label p {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
@@ -260,14 +523,25 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🎥 Sistema de Videovigilancia Inteligente</h1>
-            <p class="subtitle">Dashboard de Control y Monitoreo</p>
+            <div>
+                <h1>🎥 Sistema de Videovigilancia Inteligente</h1>
+                <p class="subtitle">Dashboard de Control y Monitoreo</p>
+            </div>
+            <div class="notification-bell" onclick="toggleNotifications()">
+                🔔
+                <span class="notification-badge" id="notificationCount">0</span>
+            </div>
         </header>
 
         <!-- Estadísticas principales -->
@@ -299,220 +573,208 @@
 
         <!-- Navegación por pestañas -->
         <div class="nav-tabs">
-            <div class="nav-tab active" onclick="showTab('detecciones')">Detecciones Recientes</div>
+            <div class="nav-tab active" onclick="showTab('detecciones')">Detecciones</div>
             <div class="nav-tab" onclick="showTab('personas')">Personas</div>
             <div class="nav-tab" onclick="showTab('eventos')">Eventos</div>
+            <div class="nav-tab" onclick="showTab('camaras')">🎥 Cámaras en Vivo</div>
+            <div class="nav-tab" onclick="showTab('reportes')">📄 Reportes</div>
+            <div class="nav-tab" onclick="showTab('config')">⚙️ Configuración</div>
         </div>
 
         <!-- Contenido principal -->
         <div class="content-grid">
-            <!-- Panel izquierdo -->
             <div class="panel">
                 <!-- Tab: Detecciones -->
                 <div id="tab-detecciones">
                     <h2>🔍 Detecciones Recientes</h2>
-                    <div id="deteccionesList">
-                        <div class="loading">
-                            <div class="spinner"></div>
-                            <p>Cargando detecciones...</p>
-                        </div>
-                    </div>
+                    <div id="deteccionesList"></div>
                 </div>
 
                 <!-- Tab: Personas -->
                 <div id="tab-personas" style="display: none;">
                     <h2>👥 Personas Registradas</h2>
-                    <button class="btn btn-primary" style="margin-bottom: 20px;">➕ Agregar Persona</button>
-                    <div id="personasList">
-                        <div class="loading">
-                            <div class="spinner"></div>
-                            <p>Cargando personas...</p>
-                        </div>
-                    </div>
+                    <button class="btn btn-primary" onclick="openAddPersonModal()" style="margin-bottom: 20px;">
+                        ➕ Agregar Persona
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportPersonas()" style="margin-bottom: 20px; margin-left: 10px;">
+                        📥 Exportar Lista
+                    </button>
+                    <div id="personasList"></div>
                 </div>
 
                 <!-- Tab: Eventos -->
                 <div id="tab-eventos" style="display: none;">
                     <h2>🚨 Eventos y Alertas</h2>
-                    <div id="eventosList">
-                        <div class="loading">
-                            <div class="spinner"></div>
-                            <p>Cargando eventos...</p>
+                    <div id="eventosList"></div>
+                </div>
+
+                <!-- Tab: Cámaras en Vivo -->
+                <div id="tab-camaras" style="display: none;">
+                    <h2>🎥 Monitoreo en Vivo</h2>
+                    <div class="camera-stream">
+                        <canvas id="liveCanvas" width="640" height="480"></canvas>
+                        <div class="stream-overlay">
+                            <span class="recording-indicator"></span>
+                            <span id="streamStatus">SIMULACIÓN EN VIVO</span>
+                        </div>
+                    </div>
+                    <p style="color: #666; text-align: center; margin-top: 10px;">
+                        💡 Vista simulada del sistema de detección en tiempo real
+                    </p>
+                </div>
+
+                <!-- Tab: Reportes -->
+                <div id="tab-reportes" style="display: none;">
+                    <h2>📄 Generación de Reportes</h2>
+
+                    <div style="margin: 30px 0;">
+                        <h3 style="margin-bottom: 15px;">Reporte de Detecciones</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Genera un reporte completo de todas las detecciones del sistema</p>
+                        <button class="btn btn-primary" onclick="exportPDF()">📄 Exportar PDF</button>
+                        <button class="btn btn-success" onclick="exportExcel()" style="margin-left: 10px;">📊 Exportar Excel</button>
+                    </div>
+
+                    <div style="margin: 30px 0;">
+                        <h3 style="margin-bottom: 15px;">Reporte de Eventos</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Genera un reporte de eventos y alertas del sistema</p>
+                        <button class="btn btn-primary" onclick="exportEventosPDF()">📄 Exportar PDF</button>
+                        <button class="btn btn-success" onclick="exportEventosExcel()" style="margin-left: 10px;">📊 Exportar Excel</button>
+                    </div>
+
+                    <div style="margin: 30px 0;">
+                        <h3 style="margin-bottom: 15px;">Estadísticas Generales</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Reporte con gráficas y estadísticas del período seleccionado</p>
+                        <div class="form-group">
+                            <label>Período:</label>
+                            <select id="reportPeriod" style="max-width: 300px;">
+                                <option value="7">Últimos 7 días</option>
+                                <option value="30">Últimos 30 días</option>
+                                <option value="90">Últimos 90 días</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="exportStatsPDF()">📄 Generar Reporte</button>
+                    </div>
+                </div>
+
+                <!-- Tab: Configuración -->
+                <div id="tab-config" style="display: none;">
+                    <h2>⚙️ Configuración del Sistema</h2>
+
+                    <div id="configList">
+                        <div class="config-item">
+                            <div class="config-label">
+                                <h4>Activar Alertas</h4>
+                                <p>Recibir notificaciones cuando se detecten eventos</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="configAlertas" onchange="updateConfig('activar_alertas', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="config-item">
+                            <div class="config-label">
+                                <h4>Guardar Frames</h4>
+                                <p>Guardar imágenes completas de las detecciones</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="configFrames" onchange="updateConfig('guardar_frames', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="config-item">
+                            <div class="config-label">
+                                <h4>Umbral de Confianza</h4>
+                                <p>Nivel mínimo para reconocimiento facial (0.4 - 0.8)</p>
+                            </div>
+                            <input type="number" id="configUmbral" min="0.4" max="0.8" step="0.05" style="width: 100px;" onchange="updateConfig('umbral_confianza', this.value)">
+                        </div>
+
+                        <div class="config-item">
+                            <div class="config-label">
+                                <h4>Retención de Imágenes</h4>
+                                <p>Días para mantener imágenes almacenadas</p>
+                            </div>
+                            <input type="number" id="configRetencion" min="1" max="365" style="width: 100px;" onchange="updateConfig('dias_retencion_imagenes', this.value)">
+                        </div>
+
+                        <div style="margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 8px;">
+                            <button class="btn btn-primary" onclick="loadConfig()">🔄 Recargar Configuración</button>
+                            <button class="btn btn-success" onclick="saveAllConfig()" style="margin-left: 10px;">💾 Guardar Todo</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Panel derecho - Actividad -->
+            <!-- Panel derecho -->
             <div class="panel">
-                <h2>📈 Actividad del Sistema</h2>
-                <div id="activityList">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>Cargando actividad...</p>
-                    </div>
-                </div>
+                <h2>📈 Actividad Reciente</h2>
+                <div id="activityList"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        const API_URL = 'http://localhost:5000/api';
+    <!-- Modal: Agregar Persona -->
+    <div id="addPersonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Registrar Nueva Persona</h2>
+                <span class="close-modal" onclick="closeModal('addPersonModal')">&times;</span>
+            </div>
 
-        // Cargar estadísticas
-        async function loadStats() {
-            try {
-                const response = await fetch(`${API_URL}/dashboard/stats`);
-                const data = await response.json();
-
-                if (data.success) {
-                    document.getElementById('statPersonas').textContent = data.data.personas_registradas;
-                    document.getElementById('statDetecciones').textContent = data.data.detecciones_hoy;
-                    document.getElementById('statDesconocidos').textContent = data.data.desconocidos_hoy;
-                    document.getElementById('statEventos').textContent = data.data.eventos_pendientes;
-                }
-            } catch (error) {
-                console.error('Error cargando estadísticas:', error);
-            }
-        }
-
-        // Cargar detecciones
-        async function loadDetecciones() {
-            try {
-                const response = await fetch(`${API_URL}/detecciones?limit=20`);
-                const data = await response.json();
-
-                const container = document.getElementById('deteccionesList');
-
-                if (data.success && data.data.length > 0) {
-                    container.innerHTML = data.data.map(det => `
-                        <div class="detection-item">
-                            <div class="detection-avatar">
-                                ${det.nombre.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="detection-info">
-                                <div class="detection-name">${det.nombre} ${det.apellido || ''}</div>
-                                <div class="detection-time">${new Date(det.timestamp).toLocaleString('es-MX')}</div>
-                            </div>
-                            <span class="badge ${det.es_desconocido ? 'badge-danger' : 'badge-success'}">
-                                ${det.es_desconocido ? 'Desconocido' : 'Conocido'}
-                            </span>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = '<p style="text-align: center; color: #999;">No hay detecciones recientes</p>';
-                }
-            } catch (error) {
-                console.error('Error cargando detecciones:', error);
-                document.getElementById('deteccionesList').innerHTML = '<p style="color: red;">Error al cargar detecciones</p>';
-            }
-        }
-
-        // Cargar personas
-        async function loadPersonas() {
-            try {
-                const response = await fetch(`${API_URL}/personas`);
-                const data = await response.json();
-
-                const container = document.getElementById('personasList');
-
-                if (data.success && data.data.length > 0) {
-                    container.innerHTML = data.data.map(persona => `
-                        <div class="detection-item">
-                            <div class="detection-avatar">
-                                ${persona.nombre.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="detection-info">
-                                <div class="detection-name">${persona.nombre_completo}</div>
-                                <div class="detection-time">${persona.tipo}</div>
-                            </div>
-                            <span class="badge badge-success">Activo</span>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = '<p style="text-align: center; color: #999;">No hay personas registradas</p>';
-                }
-            } catch (error) {
-                console.error('Error cargando personas:', error);
-            }
-        }
-
-        // Cargar eventos
-        async function loadEventos() {
-            try {
-                const response = await fetch(`${API_URL}/eventos`);
-                const data = await response.json();
-
-                const container = document.getElementById('eventosList');
-
-                if (data.success && data.data.length > 0) {
-                    container.innerHTML = data.data.map(evento => `
-                        <div class="event-item ${evento.severidad === 'alta' ? 'critical' : ''}">
-                            <div class="event-title">
-                                ${evento.severidad === 'alta' ? '🚨' : '⚠️'} ${evento.tipo}
-                            </div>
-                            <div class="event-time">${new Date(evento.timestamp).toLocaleString('es-MX')}</div>
-                            <p style="margin-top: 5px; font-size: 0.9em;">${evento.descripcion}</p>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = '<p style="text-align: center; color: #999;">No hay eventos pendientes</p>';
-                }
-            } catch (error) {
-                console.error('Error cargando eventos:', error);
-            }
-        }
-
-        // Cambiar de pestaña
-        function showTab(tabName) {
-            // Ocultar todos los tabs
-            document.querySelectorAll('[id^="tab-"]').forEach(tab => {
-                tab.style.display = 'none';
-            });
-
-            // Remover active de todos los nav-tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Mostrar tab seleccionado
-            document.getElementById(`tab-${tabName}`).style.display = 'block';
-            event.target.classList.add('active');
-
-            // Cargar datos según tab
-            if (tabName === 'personas') {
-                loadPersonas();
-            } else if (tabName === 'eventos') {
-                loadEventos();
-            }
-        }
-
-        // Cargar actividad
-        async function loadActivity() {
-            const container = document.getElementById('activityList');
-            container.innerHTML = `
-                <div style="text-align: center; padding: 20px; color: #999;">
-                    <p>📊 Actividad del sistema</p>
-                    <p style="margin-top: 10px;">Próximamente: gráficas de actividad</p>
+            <form id="addPersonForm" onsubmit="submitNewPerson(event)">
+                <div class="form-group">
+                    <label>Nombre *</label>
+                    <input type="text" id="personNombre" required>
                 </div>
-            `;
-        }
 
-        // Inicializar dashboard
-        function init() {
-            loadStats();
-            loadDetecciones();
-            loadActivity();
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="text" id="personApellido">
+                </div>
 
-            // Auto-refresh cada 30 segundos
-            setInterval(() => {
-                loadStats();
-                loadDetecciones();
-            }, 30000);
-        }
+                <div class="form-group">
+                    <label>Tipo *</label>
+                    <select id="personTipo" required>
+                        <option value="residente">Residente</option>
+                        <option value="empleado">Empleado</option>
+                        <option value="visitante_autorizado">Visitante Autorizado</option>
+                    </select>
+                </div>
 
-        // Cargar al iniciar
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+                <div class="form-group">
+                    <label>Notas</label>
+                    <textarea id="personNotas" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Captura de Rostro *</label>
+                    <video id="videoPreview" autoplay style="display: none;"></video>
+                    <canvas id="captureCanvas" style="display: none;"></canvas>
+                    <img id="capturedImage" style="display: none;">
+
+                    <div class="camera-controls">
+                        <button type="button" class="btn btn-secondary" onclick="startCamera()">📷 Abrir Cámara</button>
+                        <button type="button" class="btn btn-primary" onclick="capturePhoto()" id="captureBtn" style="display: none;">📸 Capturar</button>
+                        <button type="button" class="btn btn-secondary" onclick="retakePhoto()" id="retakeBtn" style="display: none;">🔄 Repetir</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Guardar Persona</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addPersonModal')">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-title" id="toastTitle"></div>
+        <div id="toastMessage"></div>
+    </div>
+
+    <script src="dashboard.js"></script>
 </body>
 </html>

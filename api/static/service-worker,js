@@ -1,0 +1,139 @@
+// api/static/service-worker.js
+const CACHE_NAME = 'vigia-v1.0.0';
+const urlsToCache = [
+  '/',
+  '/dashboard.js',
+  '/manifest.json'
+];
+
+// Instalación del Service Worker
+self.addEventListener('install', event => {
+  console.log('Service Worker instalando...');
+
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Cache abierto');
+        return cache.addAll(urlsToCache);
+      })
+  );
+
+  // Forzar activación inmediata
+  self.skipWaiting();
+});
+
+// Activación del Service Worker
+self.addEventListener('activate', event => {
+  console.log('Service Worker activando...');
+
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Eliminando cache antiguo:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+
+  return self.clients.claim();
+});
+
+// Interceptar peticiones de red
+self.addEventListener('fetch', event => {
+  // Estrategia: Network First, fallback to Cache
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        // Si la petición es exitosa, guardar en cache
+        if (response && response.status === 200) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+        }
+        return response;
+      })
+      .catch(() => {
+        // Si falla la red, intentar desde cache
+        return caches.match(event.request)
+          .then(response => {
+            if (response) {
+              return response;
+            }
+
+            // Si no está en cache, mostrar página offline
+            if (event.request.destination === 'document') {
+              return caches.match('/');
+            }
+          });
+      })
+  );
+});
+
+// Push Notifications
+self.addEventListener('push', event => {
+  console.log('Push recibido:', event);
+
+  const options = {
+    body: event.data ? event.data.text() : '🚨 Nueva alerta en el sistema',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
+    vibrate: [200, 100, 200],
+    tag: 'vigia-notification',
+    requireInteraction: true,
+    actions: [
+      {
+        action: 'view',
+        title: 'Ver detalles',
+        icon: '/icon-192.png'
+      },
+      {
+        action: 'dismiss',
+        title: 'Descartar',
+        icon: '/icon-192.png'
+      }
+    ]
+  };
+
+  event.waitUntil(
+    self.registration.showNotification('Videovigilancia IA', options)
+  );
+});
+
+// Manejar clicks en notificaciones
+self.addEventListener('notificationclick', event => {
+  console.log('Click en notificación:', event);
+
+  event.notification.close();
+
+  if (event.action === 'view') {
+    event.waitUntil(
+      clients.openWindow('/?action=alerts')
+    );
+  }
+});
+
+// Sincronización en segundo plano
+self.addEventListener('sync', event => {
+  console.log('Background sync:', event);
+
+  if (event.tag === 'sync-detections') {
+    event.waitUntil(syncDetections());
+  }
+});
+
+async function syncDetections() {
+  try {
+    // Aquí puedes sincronizar datos pendientes
+    console.log('Sincronizando detecciones...');
+    return Promise.resolve();
+  } catch (error) {
+    console.error('Error en sincronización:', error);
+    return Promise.reject(error);
+  }
+}
